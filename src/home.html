@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Money Home</title>
+        <link rel="stylesheet" href="css/style.css">
+        <script src="script/script.js" defer></script>
+    </head>
+    <body onload="render()">
+        <header>
+            <h1>Money Title</h1>
+            <nav>
+                <a href="transactions.html">Transactions</a>
+                <a href="history.html">History</a>
+            </nav>
+        </header>
+        
+        <section id="income">
+            <h2>Total Income</h2>
+            <span id="total-income"></span>
+            <input id="addIncome" type="text" placeholder="Add Income" onkeydown="if(event.key === 'Enter') addIncome()">
+            <button id="incomeBtn" onclick="addIncome()">+</button>
+        </section>
+
+        <section id="expenses">
+            <h2>Total Expenses</h2>
+            <span id="total-expenses">200</span>
+        </section>
+        
+        <section id="balance">
+            <h2>Current Balance</h2>
+            <span id="current-balance"></span>
+        </section>
+    </body>
+</html>
+
+<!-- Pages & Navigation
+1. Dashboard/Home Page (Page 1):
+   + Purpose: Provide users with an overview of their finances.
+   + Features:
+     + Display:
+       + Total income.
+       + Total expenses.
+       + Remaining balance (Income - Expenses).
+    + A button/link to navigate to the Add Transaction Page.
+    + A button/link to the Transaction History Page. -->
