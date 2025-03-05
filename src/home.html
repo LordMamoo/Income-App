@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Money Home</title>
+        <title>Money Manager</title>
         <link rel="stylesheet" href="css/style.css">
         <script src="script/script.js" defer></script>
     </head>
+
     <body onload="render()">
         <header>
-            <h1>Money Title</h1>
+            <h1>Money Manager</h1>
+            <span id="profile"></span>
             <nav>
                 <a href="transactions.html">Transactions</a>
                 <a href="history.html">History</a>
@@ -23,7 +25,9 @@
 
         <section id="expenses">
             <h2>Total Expenses</h2>
-            <span id="total-expenses">200</span>
+            <span id="total-expenses"></span>
+            <input id="addExpense" type="text" placeholder="Add Expense" onkeydown="if(event.key === 'Enter') addExpense()">
+            <button id="expenseBtn" onclick="addExpense()">+</button>
         </section>
         
         <section id="balance">
