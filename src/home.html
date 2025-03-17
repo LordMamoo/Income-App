@@ -8,12 +8,18 @@
 
     <body onload="render()">
         <header>
-            <h1>Money Manager</h1>
-            <span id="profile"></span>
-            <nav>
-                <a href="transactions.html">Transactions</a>
-                <a href="history.html">History</a>
-            </nav>
+            <h1>Money Title</h1>
+            <div id="header-right">
+                <nav>
+                    <a href="home.html">Home</a>
+                    <a href="history.html">History</a>
+                </nav>
+                <div id="prof-info">
+                    <span id="prof-name"></span>
+                    <!-- <img id="prof-pic" src="" alt=""> -->
+                     <a href="login.html">Sign Out</a>
+                </div>
+            </div>
         </header>
         
         <section id="income">
@@ -26,7 +32,7 @@
         <section id="expenses">
             <h2>Total Expenses</h2>
             <span id="total-expenses"></span>
-            <input id="addExpense" type="text" placeholder="Add Expense" onkeydown="if(event.key === 'Enter') addExpense()">
+            <input id="addExpense" type="text" placeholder="Add Transaction" onkeydown="if(event.key === 'Enter') addExpense()">
             <button id="expenseBtn" onclick="addExpense()">+</button>
         </section>
         
