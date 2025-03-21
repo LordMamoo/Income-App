@@ -2,19 +2,23 @@
 <html lang="en">
     <head>
         <title>Money Manager</title>
-        <link rel="stylesheet" href="css/style.css">
+        <link href="./output.css" rel="stylesheet">
+        <!-- <link rel="stylesheet" href="css/style.css"> -->
         <script src="script/script.js" defer></script>
     </head>
 
-    <body>
-        <h1>Create Profile</h1>
-        <form id="profile-form">
-            <input type="text" placeholder="Name" required>
-            <input type="text" placeholder="Email" required>
-            <input type="password" placeholder="Password" required>
-            <label for="age">Birthday</label>
-            <input id="age" type="date" required>
-            <input type="submit" onclick="submitForm()">
-        </form>
+    <body class="h-dvh w-full">
+        <div class="flex flex-col justify-between content-center">
+            <h1>Create Profile</h1>
+            <form id="profile-form">
+                <input type="text" placeholder="Name" required>
+                <input type="text" placeholder="Email" required>
+                <input class="password" type="password" placeholder="Password" required>
+                <!-- <input type="password" placeholder="Type Password Again" required> -->
+                <label for="age">Birthday</label>
+                <input id="age" type="date" required>
+                <input type="submit">
+            </form>
+        </div>
     </body>
 </html>
