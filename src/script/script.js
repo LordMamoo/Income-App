@@ -97,6 +97,11 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
+        if (!amount || isNaN(amount) || amount <= 0) {
+            alert("Enter a valid positive number.");
+            return;
+        }
+
         if (profiles.some(profile => profile.email === email)) {
             alert("A profile with this email already exists.");
             return;
@@ -202,4 +207,53 @@ class MoneyManager {
 // Initialize MoneyManager when DOM is ready
 document.addEventListener("DOMContentLoaded", () => {
     new MoneyManager();
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const transactionForm = document.querySelector("form");
+    const transactions = JSON.parse(localStorage.getItem("transactions")) || [];
+
+    transactionForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const type = document.getElementById("t-type").value;
+        const category = document.getElementById("t-category").value;
+        const amount = parseFloat(document.getElementById("t-amount").value);
+        const date = document.getElementById("t-date").value;
+        const notes = document.getElementById("t-notes").value.trim();
+
+        if (!amount || amount <= 0) {
+            alert("Enter a valid amount!");
+            return;
+        }
+
+        const newTransaction = { type, category, amount, date, notes };
+        transactions.push(newTransaction);
+        localStorage.setItem("transactions", JSON.stringify(transactions));
+
+        updateTransactionList();
+        transactionForm.reset();
+    });
+
+    function updateTransactionList() {
+        const incomeList = document.getElementById("income-list");
+        const expenseList = document.getElementById("expense-list");
+
+        incomeList.innerHTML = "";
+        expenseList.innerHTML = "";
+
+        transactions.forEach(tx => {
+            const li = document.createElement("li");
+            li.textContent = `${tx.category}: $${tx.amount.toFixed(2)} (${tx.date}) - ${tx.notes}`;
+            li.classList = 'bg-yellow-500';
+
+            if (tx.type === "Income") {
+                incomeList.appendChild(li);
+            } else {
+                expenseList.appendChild(li);
+            }
+        });
+    }
+
+    updateTransactionList();
 });

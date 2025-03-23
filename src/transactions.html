@@ -9,13 +9,13 @@
         <script src="script/script.js" defer></script>
     </head>
 
-    <body onload="render()">
-        <header class="flex justify-between content-center p-2 h-24 w-full bg-green-600">
-            <h1 class="text-3xl font-bold content-center">Money Title</h1>
-            <div id="header-right" class="flex content-center gap-2">
+    <body class="h-dvh w-full">
+        <header class="flex justify-between items-center p-2 h-1/6 w-full bg-green-600">
+            <h1 class="text-3xl font-bold items-center">Money Title</h1>
+            <div id="header-right" class="flex items-center gap-2">
                 <nav class="flex gap-2">
-                    <a class="text-center content-center bg-yellow-500 p-1 w-28 h-10 rounded-xl" href="transactions.html">Transactions</a>
-                    <a class="text-center content-center bg-yellow-500 p-1 w-28 h-10 rounded-xl" href="history.html">History</a>
+                    <a class="text-center items-center bg-yellow-500 p-1 w-28 h-10 rounded-xl" href="home.html">Home</a>
+                    <a class="text-center items-center bg-yellow-500 p-1 w-28 h-10 rounded-xl" href="history.html">History</a>
                 </nav>
                 <div id="prof-info" class="flex flex-col justify-center text-right p-2 rounded-xl bg-yellow-500">
                     <span id="prof-name"></span>
@@ -24,32 +24,37 @@
             </div>
         </header>
 
-        <main>
-            <div id="transactions-left">
-                <h2>Transactions</h2>              
-                <div id="income-list">Income</div>
-                <div id="expense-list">Expense</div>
+        <main class="flex justify-between p-3 h-5/6">
+            <div class="flex justify-between gap-4 w-1/2">
+                <div class="flex flex-col w-1/2">
+                    <h3 class="text-lg font-semibold">Income:</h3>
+                    <ul id="income-list" class="text-lg list-disc pl-4"></ul>
+                </div>
+                <div class="w-1/2">
+                    <h3 class="text-lg font-semibold">Expenses:</h3>
+                    <ul id="expense-list" class="text-lg list-disc pl-4"></ul>
+                </div>
             </div>
 
-            <div id="transaction-right">
-                <form action="">
+            <div id="transaction-right" class="flex items-center justify-center w-1/2 h-full">
+                <form action="" class="flex flex-col gap-4 w-1/2 bg-green-500 p-6 rounded-xl">
                     <label for="t-type">Type</label>
-                    <select name="t-type" id="t-type">
+                    <select name="t-type" id="t-type" class="bg-white rounded-sm">
                         <option value="Income">Income</option>
                         <option value="Expense">Expense</option>
                     </select>
 
                     <label for="t-category">Category</label>
-                    <select name="t-category" id="t-category">
-                        <option value="Rent">Rent</option>
+                    <select name="t-category" id="t-category" class="bg-white rounded-sm">
                         <option value="Salary">Salary</option>
+                        <option value="Rent">Rent</option>
                         <option value="Groceries">Groceries</option>
                     </select>
 
-                    <input id="t-amount" type="text" placeholder="$0.00" required>
-                    <input id="t-date" type="date" required>
-                    <input id="t-notes" type="text" placeholder="Notes">
-                    <button id="t-btn" onclick="transactions.addTransaction()">Save</button>
+                    <input id="t-amount" type="number" placeholder="$0.00" required class="bg-white rounded-sm">
+                    <input id="t-date" type="date" required class="bg-white rounded-sm">
+                    <input id="t-notes" type="text" placeholder="Notes" class="bg-white rounded-sm">
+                    <button id="t-btn" class="self-center bg-yellow-500 text-white p-2 rounded w-1/2">Save</button>
                 </form>
             </div>
         </main>
