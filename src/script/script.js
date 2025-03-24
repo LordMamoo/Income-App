@@ -8,8 +8,8 @@ class ProfileManager { //manages profiles
         const profile = this.profiles.find(p => p.email === email);
         if (profile) {
             this.activeProfile = profile;
-            localStorage.setItem('activeProfile', JSON.stringify(profile));
-            localStorage.setItem('activeProfileEmail', profile.email); // Track active profile for MoneyManager
+            localStorage.setItem('activeProfile', JSON.stringify(profile)); // Store the entire profile
+            localStorage.setItem('activeProfileEmail', profile.email); // Store just the email as a quick reference
         } else {
             console.error('Profile not found');
         }
@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (selectedEmail) {
             localStorage.setItem("activeProfileEmail", selectedEmail);
-            window.location.href = "../src/index.html"; // Redirect to main app
+            window.location.href = "home.html"; // Redirect to main app
         } else {
             alert("Please select a profile to log in.");
         }
@@ -107,9 +107,14 @@ document.addEventListener("DOMContentLoaded", () => {
         profiles.push(newProfile);
         localStorage.setItem("profiles", JSON.stringify(profiles));
 
+        const profileManager = new ProfileManager();
+        profileManager.setActiveProfile(email);
+
         loadProfiles(); // Update dropdown
         profileSelect.value = email;
 
         alert("Profile created successfully! Please log in.");
     });
 });
+
+document.getElementById("prof-name").innerHTML = `${activeProfile.name}`;
