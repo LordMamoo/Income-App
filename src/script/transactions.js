@@ -5,43 +5,60 @@ class MoneyManager {
         this.init();
     }
 
-    // Load income & expenses for the active profile
+    // Load profile transactions and calculate totals
     loadProfileData() {
         if (!this.activeProfileEmail) {
             console.error("No active profile found.");
             return;
         }
-        const profiles = JSON.parse(localStorage.getItem('profiles')) || [];
-        const profile = profiles.find(p => p.email === this.activeProfileEmail);
-    
-        if (profile) {
-            this.incomeTransactions = profile.income || [];  // Store as array
-            this.totalExpenses = profile.expenses || 0;
-        } else {
-            this.incomeTransactions = [];
-            this.totalExpenses = 0;
-        }
-    }
-
-    // Save updated income & expenses for the active profile
-    saveProfileData() {
-        if (!this.activeProfileEmail) return;
 
         let profiles = JSON.parse(localStorage.getItem('profiles')) || [];
+        let profile = profiles.find(p => p.email === this.activeProfileEmail);
+
+        if (profile) {
+            this.transactions = profile.transactions || [];
+            this.calculateTotals();
+        } else {
+            this.transactions = [];
+            this.totalIncome = 0;
+            this.totalExpenses = 0;
+        }
+
+        this.render(); // Update UI
+    }
+
+    // Sum up all income and expenses dynamically
+    calculateTotals() {
+        this.totalIncome = this.transactions
+            .filter(tx => tx.type === "Income")
+            .reduce((sum, tx) => sum + tx.amount, 0);
+
+        this.totalExpenses = this.transactions
+            .filter(tx => tx.type === "Expense")
+            .reduce((sum, tx) => sum + tx.amount, 0);
+    }
+
+    // Save profile data
+    saveProfileData() {
+        let profiles = JSON.parse(localStorage.getItem('profiles')) || [];
         let profileIndex = profiles.findIndex(p => p.email === this.activeProfileEmail);
-    
+
         if (profileIndex !== -1) {
-            profiles[profileIndex].income = this.totalIncome;
-            profiles[profileIndex].expenses = this.totalExpenses;
-            profiles[profileIndex].transactions = this.transactions || []; // Save transactions
+            profiles[profileIndex].transactions = this.transactions;
             localStorage.setItem('profiles', JSON.stringify(profiles));
         }
     }
 
-    // Add Income
+    // Add a new income transaction
     addIncome(amount) {
         if (!isNaN(amount) && amount > 0) {
-            this.incomeTransactions.push(amount);  // Add new income entry
+            this.transactions.push({
+                type: "Income",
+                amount,
+                date: new Date().toISOString().split("T")[0]
+            });
+
+            this.calculateTotals();
             this.saveProfileData();
             this.render();
         } else {
@@ -49,26 +66,11 @@ class MoneyManager {
         }
     }
 
-    getTotalIncome() {
-        return this.incomeTransactions.reduce((sum, amount) => sum + amount, 0);
-    }
-
-    // Add Expense
-    addExpense(amount) {
-        if (!isNaN(amount) && amount > 0) {
-            this.totalExpenses += amount;
-            this.saveProfileData();
-            this.render();
-        } else {
-            alert("Please enter a valid expense amount!");
-        }
-    }
-
-    // Calculate & update UI
+    // Render total income and balance
     render() {
-        document.getElementById("total-income").textContent = `$${this.getTotalIncome().toFixed(2)}`;
+        document.getElementById("total-income").textContent = `$${this.totalIncome.toFixed(2)}`;
         document.getElementById("total-expenses").textContent = `$${this.totalExpenses.toFixed(2)}`;
-        document.getElementById("current-balance").textContent = `$${(this.getTotalIncome() - this.totalExpenses).toFixed(2)}`;
+        document.getElementById("current-balance").textContent = `$${(this.totalIncome - this.totalExpenses).toFixed(2)}`;
     }
 
     // Initialize event listeners
@@ -79,20 +81,15 @@ class MoneyManager {
             this.addIncome(amount);
         });
 
-        document.getElementById("expenseBtn").addEventListener("click", () => {
-            const amount = parseFloat(document.getElementById("addExpense").value);
-            document.getElementById("addExpense").value = "";
-            this.addExpense(amount);
-        });
-
         this.render();
     }
 }
 
-// Initialize MoneyManager when DOM is ready
+// Initialize MoneyManager when the page loads
 document.addEventListener("DOMContentLoaded", () => {
     new MoneyManager();
 });
+
 
 document.addEventListener("DOMContentLoaded", () => {
     const profNameSpan = document.getElementById("prof-name");
