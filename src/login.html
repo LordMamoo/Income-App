@@ -1,30 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <title>Login - Money Manager</title>
-    <link rel="stylesheet" href="css/output.css">
-    <script src="script/script.js" defer></script>
-</head>
-<body class="h-screen flex flex-col justify-center items-center bg-gray-100">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-96">
-        <h1 class="text-2xl font-bold text-center mb-4">Welcome to Money Manager</h1>
+    <head>
+        <title>Login - Money Manager</title>
+        <link rel="stylesheet" href="css/output.css">
+        <script src="script/script.js" defer></script>
+    </head>
+    <body class="h-screen flex flex-col justify-center items-center bg-gray-100">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+            <h1 class="text-2xl font-bold text-center mb-4">Welcome to Money Manager</h1>
 
-        <!-- Profile Selection -->
-        <label for="profileSelect" class="block mb-2">Select Profile:</label>
-        <select id="profileSelect" class="w-full p-2 border rounded">
-            <option value="">-- Choose Profile --</option>
-        </select>
+            <!-- Profile Selection -->
+            <label for="profileSelect" class="block mb-2">Select Profile:</label>
+            <select id="profileSelect" class="w-full p-2 border rounded">
+                <option>-- Choose Profile --</option>
+            </select>
 
-        <button id="loginBtn" class="w-full bg-green-600 text-white p-2 rounded mt-4">Log In</button>
+            <button id="loginBtn" class="w-full bg-green-600 text-white p-2 rounded mt-4">Log In</button>
 
-        <hr class="my-4">
+            <hr class="my-4">
 
-        <!-- Create New Profile -->
-        <h2 class="text-xl font-bold text-center mb-2">Create a New Profile</h2>
-        <input type="text" id="newName" placeholder="Name" class="w-full p-2 border rounded mb-2">
-        <input type="email" id="newEmail" placeholder="Email" class="w-full p-2 border rounded mb-2">
-        <input type="number" id="newAge" placeholder="Age" class="w-full p-2 border rounded mb-2">
-        <button id="createProfileBtn" class="w-full bg-blue-500 text-white p-2 rounded">Create Profile</button>
-    </div>
-</body>
+            <!-- Create New Profile -->
+            <h2 class="text-xl font-bold text-center mb-2">Create a New Profile</h2>
+            <input type="text" id="newName" placeholder="Name" class="w-full p-2 border rounded mb-2">
+            <input type="email" id="newEmail" placeholder="Email" class="w-full p-2 border rounded mb-2">
+            <input type="number" id="newAge" placeholder="Age" class="w-full p-2 border rounded mb-2">
+            <button id="createProfileBtn" class="w-full bg-blue-500 text-white p-2 rounded">Create Profile</button>
+        </div>
+    </body>
 </html>

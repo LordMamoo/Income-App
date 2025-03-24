@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (selectedEmail) {
             localStorage.setItem("activeProfileEmail", selectedEmail);
-            window.location.href = "index.html"; // Redirect to main app
+            window.location.href = "../src/index.html"; // Redirect to main app
         } else {
             alert("Please select a profile to log in.");
         }
@@ -92,13 +92,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const email = document.getElementById("newEmail").value.trim();
         const age = document.getElementById("newAge").value.trim();
 
-        if (!name || !email || !age) {
-            alert("All fields are required.");
-            return;
-        }
-
-        if (!amount || isNaN(amount) || amount <= 0) {
-            alert("Enter a valid positive number.");
+        if (!name || !email || isNaN(age) || age <= 0) {
+            alert("Please enter a valid name, email, and positive age.");
             return;
         }
 
@@ -108,152 +103,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         // Create new profile
-        const newProfile = { name, email, age, income: 0, expenses: 0 };
+        const newProfile = new Profile(name, email, age);
         profiles.push(newProfile);
         localStorage.setItem("profiles", JSON.stringify(profiles));
 
         loadProfiles(); // Update dropdown
+        profileSelect.value = email;
 
         alert("Profile created successfully! Please log in.");
     });
-});
-
-class MoneyManager {
-    constructor() {
-        this.activeProfileEmail = localStorage.getItem('activeProfileEmail');
-        this.loadProfileData();
-        this.init();
-    }
-
-    // Load income & expenses for the active profile
-    loadProfileData() {
-        if (!this.activeProfileEmail) {
-            console.error("No active profile found.");
-            return;
-        }
-        const profiles = JSON.parse(localStorage.getItem('profiles')) || [];
-        const profile = profiles.find(p => p.email === this.activeProfileEmail);
-
-        if (profile) {
-            this.totalIncome = profile.income || 0;
-            this.totalExpenses = profile.expenses || 0;
-        } else {
-            this.totalIncome = 0;
-            this.totalExpenses = 0;
-        }
-    }
-
-    // Save updated income & expenses for the active profile
-    saveProfileData() {
-        if (!this.activeProfileEmail) return;
-
-        let profiles = JSON.parse(localStorage.getItem('profiles')) || [];
-        let profileIndex = profiles.findIndex(p => p.email === this.activeProfileEmail);
-
-        if (profileIndex !== -1) {
-            profiles[profileIndex].income = this.totalIncome;
-            profiles[profileIndex].expenses = this.totalExpenses;
-            localStorage.setItem('profiles', JSON.stringify(profiles));
-        }
-    }
-
-    // Add Income
-    addIncome(amount) {
-        if (!isNaN(amount) && amount > 0) {
-            this.totalIncome += amount;
-            this.saveProfileData();
-            this.render();
-        } else {
-            alert("Please enter a valid income amount!");
-        }
-    }
-
-    // Add Expense
-    addExpense(amount) {
-        if (!isNaN(amount) && amount > 0) {
-            this.totalExpenses += amount;
-            this.saveProfileData();
-            this.render();
-        } else {
-            alert("Please enter a valid expense amount!");
-        }
-    }
-
-    // Calculate & update UI
-    render() {
-        document.getElementById("total-income").textContent = `$${this.totalIncome.toFixed(2)}`;
-        document.getElementById("total-expenses").textContent = `$${this.totalExpenses.toFixed(2)}`;
-        document.getElementById("current-balance").textContent = `$${(this.totalIncome - this.totalExpenses).toFixed(2)}`;
-    }
-
-    // Initialize event listeners
-    init() {
-        document.getElementById("incomeBtn").addEventListener("click", () => {
-            const amount = parseFloat(document.getElementById("addIncome").value);
-            document.getElementById("addIncome").value = "";
-            this.addIncome(amount);
-        });
-
-        document.getElementById("expenseBtn").addEventListener("click", () => {
-            const amount = parseFloat(document.getElementById("addExpense").value);
-            document.getElementById("addExpense").value = "";
-            this.addExpense(amount);
-        });
-
-        this.render();
-    }
-}
-
-// Initialize MoneyManager when DOM is ready
-document.addEventListener("DOMContentLoaded", () => {
-    new MoneyManager();
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-    const transactionForm = document.querySelector("form");
-    const transactions = JSON.parse(localStorage.getItem("transactions")) || [];
-
-    transactionForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-
-        const type = document.getElementById("t-type").value;
-        const category = document.getElementById("t-category").value;
-        const amount = parseFloat(document.getElementById("t-amount").value);
-        const date = document.getElementById("t-date").value;
-        const notes = document.getElementById("t-notes").value.trim();
-
-        if (!amount || amount <= 0) {
-            alert("Enter a valid amount!");
-            return;
-        }
-
-        const newTransaction = { type, category, amount, date, notes };
-        transactions.push(newTransaction);
-        localStorage.setItem("transactions", JSON.stringify(transactions));
-
-        updateTransactionList();
-        transactionForm.reset();
-    });
-
-    function updateTransactionList() {
-        const incomeList = document.getElementById("income-list");
-        const expenseList = document.getElementById("expense-list");
-
-        incomeList.innerHTML = "";
-        expenseList.innerHTML = "";
-
-        transactions.forEach(tx => {
-            const li = document.createElement("li");
-            li.textContent = `${tx.category}: $${tx.amount.toFixed(2)} (${tx.date}) - ${tx.notes}`;
-            li.classList = 'bg-yellow-500';
-
-            if (tx.type === "Income") {
-                incomeList.appendChild(li);
-            } else {
-                expenseList.appendChild(li);
-            }
-        });
-    }
-
-    updateTransactionList();
 });
