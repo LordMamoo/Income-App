@@ -13,12 +13,12 @@ class MoneyManager {
         }
         const profiles = JSON.parse(localStorage.getItem('profiles')) || [];
         const profile = profiles.find(p => p.email === this.activeProfileEmail);
-
+    
         if (profile) {
-            this.totalIncome = profile.income || 0;
+            this.incomeTransactions = profile.income || [];  // Store as array
             this.totalExpenses = profile.expenses || 0;
         } else {
-            this.totalIncome = 0;
+            this.incomeTransactions = [];
             this.totalExpenses = 0;
         }
     }
@@ -29,10 +29,11 @@ class MoneyManager {
 
         let profiles = JSON.parse(localStorage.getItem('profiles')) || [];
         let profileIndex = profiles.findIndex(p => p.email === this.activeProfileEmail);
-
+    
         if (profileIndex !== -1) {
             profiles[profileIndex].income = this.totalIncome;
             profiles[profileIndex].expenses = this.totalExpenses;
+            profiles[profileIndex].transactions = this.transactions || []; // Save transactions
             localStorage.setItem('profiles', JSON.stringify(profiles));
         }
     }
@@ -40,12 +41,16 @@ class MoneyManager {
     // Add Income
     addIncome(amount) {
         if (!isNaN(amount) && amount > 0) {
-            this.totalIncome += amount;
+            this.incomeTransactions.push(amount);  // Add new income entry
             this.saveProfileData();
             this.render();
         } else {
             alert("Please enter a valid income amount!");
         }
+    }
+
+    getTotalIncome() {
+        return this.incomeTransactions.reduce((sum, amount) => sum + amount, 0);
     }
 
     // Add Expense
@@ -61,9 +66,9 @@ class MoneyManager {
 
     // Calculate & update UI
     render() {
-        document.getElementById("total-income").textContent = `$${this.totalIncome.toFixed(2)}`;
+        document.getElementById("total-income").textContent = `$${this.getTotalIncome().toFixed(2)}`;
         document.getElementById("total-expenses").textContent = `$${this.totalExpenses.toFixed(2)}`;
-        document.getElementById("current-balance").textContent = `$${(this.totalIncome - this.totalExpenses).toFixed(2)}`;
+        document.getElementById("current-balance").textContent = `$${(this.getTotalIncome() - this.totalExpenses).toFixed(2)}`;
     }
 
     // Initialize event listeners
@@ -90,8 +95,36 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
+    const profNameSpan = document.getElementById("prof-name");
+    const profiles = JSON.parse(localStorage.getItem("profiles")) || [];
+    const activeProfileEmail = localStorage.getItem("activeProfileEmail");
+
+    if (activeProfileEmail) {
+        // Find the active profile by email
+        const activeProfile = profiles.find(profile => profile.email === activeProfileEmail);
+        
+        if (activeProfile) {
+            profNameSpan.textContent = activeProfile.name; // Display profile name
+        } else {
+            profNameSpan.textContent = "Unknown User"; // Fallback if profile is not found
+        }
+    } else {
+        profNameSpan.textContent = "Guest";
+    }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
     const transactionForm = document.querySelector("form");
-    let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
+    const activeProfileEmail = localStorage.getItem("activeProfileEmail");
+    let profiles = JSON.parse(localStorage.getItem("profiles")) || [];
+    let activeProfile = profiles.find(p => p.email === activeProfileEmail);
+
+    if (!activeProfile) {
+        alert("No active profile found!");
+        return;
+    }
+
+    let transactions = activeProfile.transactions || [];
 
     transactionForm.addEventListener("submit", (e) => {
         e.preventDefault();
@@ -107,9 +140,13 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        const newTransaction = { id: Date.now(), type, category, amount, date, notes};
+        // Create a new transaction
+        const newTransaction = { id: Date.now(), type, category, amount, date, notes };
         transactions.push(newTransaction);
-        localStorage.setItem("transactions", JSON.stringify(transactions));
+        activeProfile.transactions = transactions;
+
+        // Save back to localStorage
+        localStorage.setItem("profiles", JSON.stringify(profiles));
 
         updateTransactionList();
         transactionForm.reset();
@@ -148,9 +185,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function deleteTransaction(id) {
-        console.log(id);
         transactions = transactions.filter(tx => tx.id !== id);
-        localStorage.setItem("transactions", JSON.stringify(transactions));
+        activeProfile.transactions = transactions;
+        localStorage.setItem("profiles", JSON.stringify(profiles));
         updateTransactionList();
     }
 

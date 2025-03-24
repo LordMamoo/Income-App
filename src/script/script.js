@@ -41,12 +41,13 @@ class ProfileManager { //manages profiles
 }
 
 class Profile { //creates a new profile
-    constructor (name, email, age) {
+    constructor(name, email, age) {
         this.name = name;
         this.email = email;
         this.age = age;
         this.income = 0;
         this.expenses = 0;
+        this.transactions = []; // Store transactions for each profile
     }
     
     getProfileInfo() {
@@ -116,5 +117,3 @@ document.addEventListener("DOMContentLoaded", () => {
         alert("Profile created successfully! Please log in.");
     });
 });
-
-document.getElementById("prof-name").innerHTML = `${activeProfile.name}`;
